@@ -6,6 +6,7 @@ import com.codes.studentsystem.dto.response.StudentResponse;
 import com.codes.studentsystem.exception.NotFoundException;
 import com.codes.studentsystem.model.Student;
 import com.codes.studentsystem.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

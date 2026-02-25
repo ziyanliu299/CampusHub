@@ -5,6 +5,8 @@ import Container from '@mui/material/Container';
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { studentApi } from "../api/api";
+import { getToken } from "../auth/token";
+import { getRoleFromToken } from "../auth/jwt";
 
 export default function Student() {
     const paperStyle={padding:'50px 20px', width:600, margin:"20px auto"}
@@ -19,6 +21,9 @@ export default function Student() {
     const [page, setPage] = useState(0);
     const [size] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
+    const token = getToken();
+    const role = token ? getRoleFromToken(token) : null;
+    const isAdmin = role === "ADMIN";
 
 
    const handleSubmit = async (e) => {
@@ -72,6 +77,7 @@ export default function Student() {
 
     return (
     <Container>
+    {isAdmin && (
         <Paper elevation={3} style={paperStyle}>
           <h1 style={{color:"blue"}}>Add Student</h1>
 
@@ -133,6 +139,7 @@ export default function Student() {
 
       </Box>
     </Paper>
+)}
 
     <h1>Student List</h1>
 
@@ -174,6 +181,7 @@ export default function Student() {
         Address : {s.address}
 
         <div style={{ marginTop: "10px" }}>
+          {isAdmin && (
           <button
             onClick={() => {
               // Edit: fill the form with this student's values
@@ -186,7 +194,9 @@ export default function Student() {
           >
             Edit
           </button>
+ )}
 
+  {isAdmin && (
           <button
             style={{ marginLeft: "10px" }}
             onClick={async () => {
@@ -207,6 +217,7 @@ export default function Student() {
           >
             Delete
           </button>
+          )}
         </div>
       </Paper>
     ))}

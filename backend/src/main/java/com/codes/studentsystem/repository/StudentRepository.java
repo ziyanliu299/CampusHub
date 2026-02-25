@@ -16,7 +16,6 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
         where lower(s.name) like lower(concat('%', :q, '%'))
            or lower(s.address) like lower(concat('%', :q, '%'))
     """)
-
     Page<Student> search(@Param("q") String q, Pageable pageable);
 
 }

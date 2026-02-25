@@ -1,9 +1,13 @@
+import { getToken, clearToken } from "../auth/token";
 const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:8080";
 
 async function request(path, options = {}) {
+  const token = getToken();
+
   const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
     },
     ...options,
@@ -15,6 +19,9 @@ async function request(path, options = {}) {
   const data = isJson ? await res.json().catch(() => null) : await res.text().catch(() => null);
 
   if (!res.ok) {
+   if (res.status === 401) {
+      clearToken(); // token expires or invalid, then clear the user
+    }
     // Backend ApiError format: { status, error, message, path, ... }
     const message =
       (data && data.message) ||
@@ -43,4 +50,9 @@ export const studentApi = {
   create: (payload) => request("/students", { method: "POST", body: JSON.stringify(payload) }),
   update: (id, payload) => request(`/students/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
   remove: (id) => request(`/students/${id}`, { method: "DELETE" }),
+};
+
+export const authApi = {
+  login: (payload) => request("/auth/login", { method: "POST", body: JSON.stringify(payload) }),
+  register: (payload) => request("/auth/register", { method: "POST", body: JSON.stringify(payload) }),
 };

@@ -1,31 +1,25 @@
-import MuiAppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
-export default function AppBar() {
+export default function Appbar({ username, role, onLogout }) {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <MuiAppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Spring Boot React App
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </MuiAppBar>
-    </Box>
+    <MuiAppBar position="static">
+      <Toolbar>
+        <Typography variant="h6">CampusHub</Typography>
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        <Typography variant="body2" sx={{ mr: 2 }}>
+          {username ? `${username} (${role || "UNKNOWN"})` : "Not logged in"}
+        </Typography>
+
+        <Button color="inherit" onClick={onLogout}>
+          Logout
+        </Button>
+      </Toolbar>
+    </MuiAppBar>
   );
 }

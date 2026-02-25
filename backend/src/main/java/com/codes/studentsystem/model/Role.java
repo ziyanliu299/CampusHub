@@ -1,4 +1,6 @@
 package com.codes.studentsystem.model;
 
-public class Role {
+public enum Role {
+    ADMIN,
+    USER
 }

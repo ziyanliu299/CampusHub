@@ -3,6 +3,7 @@ import com.codes.studentsystem.dto.request.StudentCreateRequest;
 import com.codes.studentsystem.dto.request.StudentUpdateRequest;
 import com.codes.studentsystem.dto.response.StudentResponse;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.codes.studentsystem.service.StudentService;
@@ -19,6 +20,7 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
