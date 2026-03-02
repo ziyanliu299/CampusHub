@@ -23,9 +23,7 @@ public class AuthController {
     public AuthResponse register(@Valid @RequestBody AuthRegisterRequest request) {
         return authService.register(request);
     }
-    @GetMapping("/ping")
-    public String ping() { return "ok"; }
-
+   
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody AuthLoginRequest request) {
         return authService.login(request);
