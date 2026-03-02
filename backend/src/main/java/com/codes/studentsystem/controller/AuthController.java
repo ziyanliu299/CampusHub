@@ -6,7 +6,6 @@ import com.codes.studentsystem.dto.request.AuthRegisterRequest;
 import com.codes.studentsystem.dto.response.AuthResponse;
 import com.codes.studentsystem.service.AuthService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +23,8 @@ public class AuthController {
     public AuthResponse register(@Valid @RequestBody AuthRegisterRequest request) {
         return authService.register(request);
     }
+    @GetMapping("/ping")
+    public String ping() { return "ok"; }
 
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody AuthLoginRequest request) {

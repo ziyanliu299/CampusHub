@@ -1,6 +1,7 @@
 package com.codes.studentsystem.dto.response;
 
-public class AuthResponse {
+public class
+AuthResponse {
     private String token;
 
     public AuthResponse(String token){

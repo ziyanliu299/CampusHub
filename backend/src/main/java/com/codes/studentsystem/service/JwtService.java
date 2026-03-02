@@ -21,7 +21,7 @@ public class JwtService {
         this.expMillis = expSeconds * 1000;
        }
 
-    public String generateToken(String username, String role){
+    public String generateToken(Integer userId, String username, String role){
         Date now = new Date();
         Date exp = new Date(now.getTime() + expMillis);
 
@@ -29,13 +29,27 @@ public class JwtService {
                 .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(exp)
-                .addClaims(Map.of("role", role))
+                .addClaims(Map.of("role", role, "userId", userId))
                 .signWith(key)
                 .compact();
     }
 
+    public Integer parseUserId(String token) {
+        Object v = Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId");
+
+        if (v == null) return null;
+        if (v instanceof Integer i) return i;
+        if (v instanceof Number n) return n.intValue();
+        return Integer.parseInt(v.toString());
+    }
+
     public String parseUsername(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();

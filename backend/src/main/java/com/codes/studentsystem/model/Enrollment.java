@@ -13,10 +13,11 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Many enrollments per student
+
+    // Enrollment belongs to the authenticated user
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    @JoinColumn(name = "user_id", nullable = false)
+    private AppUser user;
 
     // Many enrollments per course
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -34,16 +35,16 @@ public class Enrollment {
     private Instant updatedAt;
 
     public Enrollment() {}
-    public Enrollment(Student student, Course course) {
-        this.student = student;
+    public Enrollment(AppUser user, Course course) {
+        this.user = user;
         this.course = course;
         this.status = EnrollmentStatus.ENROLLED;
         this.createdAt = Instant.now();
     }
 
-    // getters/setters
+
     public Long getId() { return id; }
-    public Student getStudent() { return student; }
+    public AppUser getUser() { return user; }
     public Course getCourse() { return course; }
 
     public EnrollmentStatus getStatus() { return status; }
