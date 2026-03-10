@@ -23,6 +23,10 @@ public class Course {
     @Column(nullable = false)
     private Integer capacity;
 
+
+    @Column(name = "enrolled_count", nullable = false)
+    private Integer enrolledCount = 0;
+
     public Course() {}
 
     // getters/setters
@@ -39,5 +43,13 @@ public class Course {
 
     public Integer getCapacity() { return capacity; }
     public void setCapacity(Integer capacity) { this.capacity = capacity; }
+
+    public Integer getEnrolledCount() {
+        return enrolledCount;
+    }
+    public void setEnrolledCount(Integer enrolledCount) {
+        this.enrolledCount = enrolledCount;
+    }
+
 }
 

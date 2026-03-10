@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.codes.studentsystem.exception.CapacityFullException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Service
 public class EnrollmentServiceImpl implements EnrollmentService {
@@ -41,24 +43,29 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             throw new ConflictException("already enrolled");
         }
 
-        long enrolledCount = enrollmentRepository.countByCourseIdAndStatus(courseId, EnrollmentStatus.ENROLLED);
-        if (enrolledCount >= course.getCapacity()) {
-            throw new ConflictException("course is full");
+        int updated = courseRepository.tryIncrementEnrollment(courseId);
+        if (updated == 0) {
+            throw new CapacityFullException("course is full");
         }
 
         AppUser user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("user not found: " + userId));
 
-        Enrollment saved;
-        if (existing != null) {
-            existing.setStatus(EnrollmentStatus.ENROLLED);
-            saved = enrollmentRepository.save(existing);
-        } else {
-            Enrollment e = new Enrollment(user, course);
-            saved = enrollmentRepository.save(e);
-        }
 
-        return toResponse(saved);
+        try {
+            Enrollment saved;
+            if (existing != null) {
+                existing.setStatus(EnrollmentStatus.ENROLLED);
+                saved = enrollmentRepository.save(existing);
+            } else {
+                Enrollment e = new Enrollment(user, course);
+                saved = enrollmentRepository.save(e);
+            }
+
+            return toResponse(saved);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ConflictException("already enrolled");
+        }
     }
 
     @Override
@@ -75,8 +82,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         e.setStatus(EnrollmentStatus.DROPPED);
         Enrollment saved = enrollmentRepository.save(e);
+
+        int updated = courseRepository.decrementEnrollment(courseId);
+        if (updated == 0) {
+            throw new ConflictException("course enrollment count is already zero");
+        }
+
         return toResponse(saved);
     }
+
 
     @Override
     public Page<EnrollmentResponse> listMyEnrollments(int page, int size, String sort) {

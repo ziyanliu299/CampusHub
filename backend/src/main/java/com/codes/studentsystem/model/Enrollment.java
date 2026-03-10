@@ -6,7 +6,7 @@ import java.time.Instant;
 @Table(name = "enrollment",
         uniqueConstraints = @UniqueConstraint(
                 name = "uk_enrollment_student_course",
-                columnNames = {"student_id", "course_id"}
+                columnNames = {"user_id", "course_id"}
         ))
 public class Enrollment {
     @Id
